@@ -1,0 +1,62 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:14
+    restart: always
+    environment:
+      POSTGRES_USER: gateway
+      POSTGRES_PASSWORD: gateway
+      POSTGRES_DB: gateway
+    ports:
+      - "5432:5432"
+
+  mongo:
+    image: mongo:5
+    restart: always
+    ports:
+      - "27017:27017"
+
+  ingestion:
+    build: ./services/ingestion
+    depends_on:
+      - postgres
+    environment:
+      - DATABASE_URL=postgresql://gateway:gateway@postgres:5432/gateway
+    ports:
+      - "3001:3000"
+
+  swap-engine:
+    build: ./services/swap-engine
+    depends_on:
+      - postgres
+    ports:
+      - "3002:3000"
+
+  wallet-manager:
+    build: ./services/wallet-manager
+    depends_on:
+      - postgres
+    ports:
+      - "3003:3000"
+
+  settlement:
+    build: ./services/settlement
+    depends_on:
+      - postgres
+    ports:
+      - "3004:3000"
+
+  compliance:
+    build: ./services/compliance
+    depends_on:
+      - postgres
+    ports:
+      - "3005:3000"
+
+  monitoring:
+    build: ./services/monitoring
+    depends_on:
+      - postgres
+    ports:
+      - "3006:3000"
+
