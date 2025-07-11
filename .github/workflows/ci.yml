@@ -1,0 +1,27 @@
+name: CI
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [ingestion, swap-engine, wallet-manager, settlement, compliance, monitoring]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: |
+          cd services/${{ matrix.service }}
+          npm install
+      - name: Run tests
+        run: |
+          cd services/${{ matrix.service }}
+          npm test --if-present
