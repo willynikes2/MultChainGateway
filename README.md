@@ -1,4 +1,4 @@
-# Multi-Chain Crypto Payment Gateway Scaffold
+# Multi-Chain Crypto Payment Gateway 
 
 This repository contains a minimal scaffold for a multi-service crypto payment gateway.
 
